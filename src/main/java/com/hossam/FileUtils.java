@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FileUtils {
 
-    private static String[] readFileToArray(String filePath) {
+    public static String[] readFileToArray(String filePath) {
         List<String> lines = new ArrayList<>();
         try (InputStream is = Main.class.getClassLoader().getResourceAsStream(filePath)) {
             assert is != null;
@@ -27,8 +27,8 @@ public class FileUtils {
         return lines.toArray(new String[0]);
     }
 
-    public  static void saveGraphToFile(Graph graph, String inputFilePath) {
-        File dir = new File("src/main/graphs");
+    public  static void saveGraphToFile(Graph graph, String inputFilePath, Boolean isDirected) {
+        File dir = new File("src/main/graphs"); // Speichern von gerichteten Graphen fehlt!
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -40,7 +40,14 @@ public class FileUtils {
                 try {
                     String node0 = edge.getNode0().getId();
                     String node1 = edge.getNode1().getId();
-                    String line = String.format("%s -- %s", node0, node1);
+                    String line;
+                    if (isDirected){
+                        line = String.format("%s -> %s", node0, node1);
+                    }
+                    else {
+                        line = String.format("%s -- %s", node0, node1);
+                    }
+
                     if (edge.hasAttribute("weight")) {
                         line += " : " + edge.getAttribute("weight");
                     }
