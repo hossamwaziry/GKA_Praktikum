@@ -1,6 +1,5 @@
 package com.hossam;
 
-import com.hossam.algorithms.BFSAlgorithm;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -11,8 +10,8 @@ import org.graphstream.ui.view.Viewer;
 import java.util.*;
 
 import static com.hossam.FileUtils.readFileToArray;
-import static com.hossam.algorithms.KruskalAlgorithm.kruskalMST;
-import static com.hossam.algorithms.PrimAlgorithm.primMST;
+import static com.hossam.algorithms.KruskalAlgorithm.kruskalAlgorithm;
+import static com.hossam.algorithms.PrimAlgorithm.primAlgorithm;
 
 public class Main {
     public static void main(String[] args) {
@@ -28,10 +27,11 @@ public class Main {
         String filePath9 = "graph09.gka";
         String filePath10 = "graph10.gka";
         String filePath11 = "graph11.gka";
-
+        String filePathX = "generated_01.gka";
+        String filePath5000 = "generated_5000.gka";
 //        runGraph(filePath1, "a", "h");
 //        runGraph(filePath2, "a", "k");
-        runGraph(filePath3,"Hamburg", "Kiel");
+//        runGraph(filePath3,"Hamburg", "Kiel");
 //        runGraph(filePath4, "s", "v5");
 //        runGraph(filePath5, "v1", "v5");
 //        runGraph(filePath6, "1", "9");
@@ -40,6 +40,7 @@ public class Main {
 //        runGraph(filePath9, "a", "l");
 //        runGraph(filePath10, "v3", "v9");
 //        runGraph(filePath11, "v1", "v2");
+        runGraph(filePathX, "v355", "v445");
     }
 
     private static void runGraph(String filePath, String startNode, String endNode) {
@@ -49,7 +50,7 @@ public class Main {
         boolean isDirected = detectGraphType(lines);
 
         Graph graph = createGraphFromLines(lines, isDirected);
-
+//
 //        Viewer viewer = graph.display();
 //        viewer.enableAutoLayout(new SpringBox());
 
@@ -57,23 +58,22 @@ public class Main {
 
 
 //         Run Kruskal's algorithm
-//        List<Edge> mst = kruskalMST(graph);
-//
-//        if (!mst.isEmpty()) {
-//            System.out.println("Minimum Spanning Tree found:");
-//            for (Edge edge : mst) {
-//                System.out.println(edge.getNode0().getId() + " -- " + edge.getNode1().getId() + " : " + edge.getAttribute("weight"));
-//            }
-//            // Create and display MST graph
-//            Graph mstGraph = createMSTGraph(mst, isDirected);
-//            Viewer mstViewer = mstGraph.display();
-//            mstViewer.enableAutoLayout(new SpringBox());
-//            highlightEdges(mst);
-//        } else {
-//            System.out.println("No MST found.");
-//        }
+        List<Edge> mst = kruskalAlgorithm(graph,1000);
 
-//        BFSAlgorithm bfsAlgorithm = new BFSAlgorithm();
+        if (!mst.isEmpty()) {
+            System.out.println("Minimum Spanning Tree found:");
+            for (Edge edge : mst) {
+                System.out.println(edge.getNode0().getId() + " -- " + edge.getNode1().getId() + " : " + edge.getAttribute("weight"));
+            }
+            // Create and display MST graph
+            Graph mstGraph = createMSTGraph(mst, isDirected);
+            Viewer mstViewer = mstGraph.display();
+            mstViewer.enableAutoLayout(new SpringBox());
+            highlightEdges(mst);
+        } else {
+            System.out.println("No MST found.");
+        }
+
 //        List<String> path = bfsAlgorithm.runBFSAlgorithm(graph, startNode, endNode, isDirected);
 //        int edgeCount = bfsAlgorithm.countEdges(path);
 //
@@ -89,21 +89,26 @@ public class Main {
 
         // Run Prim's algorithm
 
-        List<Edge> mstPrim = primMST(graph, startNode);
+//        List<Edge> mstPrim = primAlgorithm(graph, startNode);
+//
+//        if (!mstPrim.isEmpty()) {
+//            System.out.println("Minimum Spanning Tree using Prim's algorithm:");
+//            for (Edge edge : mstPrim) {
+//                System.out.println(edge.getNode0().getId() + " -- " + edge.getNode1().getId() + " : " + edge.getAttribute("weight"));
+//            }
+//
+//            // Create and display MST graph
+//            Graph mstGraphPrim = createMSTGraph(mstPrim, isDirected);
+//            Viewer mstViewerPrim = mstGraphPrim.display();
+//            mstViewerPrim.enableAutoLayout(new SpringBox());
+//        } else {
+//            System.out.println("No MST found using Prim's algorithm.");
+//        }
 
-        if (!mstPrim.isEmpty()) {
-            System.out.println("Minimum Spanning Tree using Prim's algorithm:");
-            for (Edge edge : mstPrim) {
-                System.out.println(edge.getNode0().getId() + " -- " + edge.getNode1().getId() + " : " + edge.getAttribute("weight"));
-            }
 
-            // Create and display MST graph
-            Graph mstGraphPrim = createMSTGraph(mstPrim, isDirected);
-            Viewer mstViewerPrim = mstGraphPrim.display();
-            mstViewerPrim.enableAutoLayout(new SpringBox());
-        } else {
-            System.out.println("No MST found using Prim's algorithm.");
-        }
+//        Graph graphFactory =primMST(generateGraph(10, 15),"");
+//        Viewer mstViewerPrim = graphFactory.display();
+//        mstViewerPrim.enableAutoLayout(new SpringBox());
     }
 
     private static Graph createMSTGraph(List<Edge> mstEdges, boolean isDirected) {
@@ -242,7 +247,7 @@ public class Main {
                     "   z-index: 1;" +
                     "}" +
                     "edge {" +
-//                    "   shape: cubic-curve;" +
+                    "   shape: cubic-curve;" +
                     "   size: 3px;" +
                     "   fill-color: rgba(52,68,91, 150);" +
                     "   text-color: rgba(52,68,91, 200);" +
