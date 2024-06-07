@@ -8,7 +8,7 @@ import java.util.*;
 
 public class PrimAlgorithm {
 
-    public static List<Edge> primAlgorithm(Graph graph, String startNodeId) {
+    public static List<Edge> primAlgorithm(Graph graph, String startNodeId, long durationMillis) {
         long startTime = System.currentTimeMillis();
 
         List<Edge> mst = new ArrayList<>();
@@ -26,7 +26,14 @@ public class PrimAlgorithm {
         priorityQueue.addAll(startNode.leavingEdges().toList());
 
         while (!priorityQueue.isEmpty()) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - startTime > durationMillis) {
+                System.out.println("Time limit exceeded for Prim's algorithm.");
+                break;
+            }
+
             Edge edge = priorityQueue.poll();
+            assert edge != null;
             Node node = edge.getOpposite(visited.contains(edge.getNode0()) ? edge.getNode0() : edge.getNode1());
 
             if (!visited.contains(node)) {
@@ -41,11 +48,11 @@ public class PrimAlgorithm {
             }
         }
 
-        long endTime = System.currentTimeMillis(); // End time measurement
-        long duration = (endTime - startTime); // Duration in nanoseconds
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
 
-        System.out.println("Total weight of MST using Prim's algorithm: " + totalWeight);
-        System.out.println("Prim's algorithm execution time: " + duration + " milliseconds");
+        System.out.println("Total weight of MST using Prim's algorithm: " + totalWeight+"\n");
+        System.out.println("Prim's algorithm execution time: " + duration + " milliseconds"+"\n");
 
         return mst;
     }

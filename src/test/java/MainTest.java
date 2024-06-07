@@ -1,6 +1,5 @@
 import com.hossam.algorithms.BFSAlgorithm;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.util.List;
 
-import static com.hossam.FileUtils.readFileToArray;
-import static com.hossam.FileUtils.saveGraphToFile;
+import static com.hossam.algorithms.BFSAlgorithm.bfsAlgorithm;
+import static com.hossam.graph.GraphProperties.detectGraphType;
 import static com.hossam.Main.*;
-import static java.nio.file.Files.readAllBytes;
+import static com.hossam.utils.FileUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MainTest {
@@ -35,11 +34,8 @@ public class MainTest {
 
     @Test
     public void testSaveGraphToFile() {
-
-        String[] lines = readFileToArray(TEST_FILE);
-        boolean isDirected = detectGraphType(lines);
-        graph =createGraphFromLines(lines, isDirected);
-        saveGraphToFile(graph, TEST_FILE,false);
+        graph = getGraph(TEST_FILE);
+        saveGraphToFile(graph, TEST_FILE, false);
 
         File savedFile = new File(OUTPUT_DIR, new File(TEST_FILE).getName());
         assertTrue(savedFile.exists());
@@ -53,11 +49,10 @@ public class MainTest {
         int expectedEdgeNumbers = 4;
 
         boolean isDirected = detectGraphType(lines);
-        graph = createGraphFromLines(lines, isDirected);
-        BFSAlgorithm bfsAlgorithm= new BFSAlgorithm();
-        List<String> path = bfsAlgorithm.runBFSAlgorithm(graph, startNode, endNode, isDirected);
+        graph = getGraph(TEST_FILE);
+        List<String> path = bfsAlgorithm(graph, startNode, endNode, isDirected);
         assertNotNull(path);
 
-        assertEquals(expectedEdgeNumbers, bfsAlgorithm.countEdges(path));
+        assertEquals(expectedEdgeNumbers, BFSAlgorithm.countEdges(path));
     }
 }

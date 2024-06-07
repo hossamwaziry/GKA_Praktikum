@@ -7,7 +7,7 @@ import java.util.*;
 
 public class BFSAlgorithm {
 
-    public List<String> runBFSAlgorithm(Graph graph, String startNode, String endNode, boolean isDirected) {
+    public static List<String> bfsAlgorithm(Graph graph, String startNode, String endNode, boolean isDirected) {
         Map<String, String> parent = new HashMap<>();
         Queue<String> queue = new LinkedList<>();
         Set<String> visited = new HashSet<>();
@@ -39,7 +39,7 @@ public class BFSAlgorithm {
         return Collections.emptyList();
     }
 
-    private List<String> constructPath(Map<String, String> parent, String endNode) {
+    private static List<String> constructPath(Map<String, String> parent, String endNode) {
         List<String> path = new ArrayList<>();
         for (String at = endNode; at != null; at = parent.get(at)) {
             path.add(at);
@@ -48,7 +48,7 @@ public class BFSAlgorithm {
         return path;
     }
 
-    public int countEdges(List<String> path) {
+    public static int countEdges(List<String> path) {
         return path.size() - 1;
     }
 }
